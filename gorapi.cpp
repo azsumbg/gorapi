@@ -158,16 +158,15 @@ class HERO :public dll::FACTORY
 			{
 				switch (jump_dir)
 				{
-					switch (jump_dir)
-					{
-					case dll::dirs::right:
-						if (ex + speed <= scr_width && ex + speed <= jump_ex) x += speed;
-						break;
 
-					case dll::dirs::left:
-						if (x - speed >= 0 && x + speed >= jump_ex) x -= speed;
-						break;
-					}
+				case dll::dirs::right:
+					if (ex + speed <= scr_width && ex + speed <= jump_ex) x += speed;
+					break;
+
+				case dll::dirs::left:
+					if (x - speed >= 0 && x + speed >= jump_ex) x -= speed;
+					break;
+
 				}
 				if (y < jump_ey)y += speed;
 				else dir = dll::dirs::stop;
