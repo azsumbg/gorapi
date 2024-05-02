@@ -67,6 +67,10 @@ class EVILS :public dll::FACTORY
 		{
 			return NaN;
 		}
+		void Fall(float what_speed) override
+		{
+			return;
+		}
 };
 
 class HERO :public dll::FACTORY
@@ -126,10 +130,10 @@ class HERO :public dll::FACTORY
 				jump_x = ex;
 				jump_y = y;
 				
-				if (dir == dll::dirs::right || dir == dll::dirs::stop)jump_ex = jump_x + 1.5f * width;
-				else if (dir == dll::dirs::left)jump_ex = jump_x - 1.5f * width;
+				if (dir == dll::dirs::right || dir == dll::dirs::stop)jump_ex = jump_x + 1.3f * width;
+				else if (dir == dll::dirs::left)jump_ex = jump_x - 1.3f * width;
 
-				jump_ey = jump_y - 2.0f * height;
+				jump_ey = jump_y - 1.6f * height;
 				jump_dir = dir;
 				if (jump_dir == dll::dirs::stop)jump_dir = dll::dirs::right;
 				dir = dll::dirs::up;
@@ -140,15 +144,15 @@ class HERO :public dll::FACTORY
 				switch (jump_dir)
 				{
 				case dll::dirs::right:
-					if (ex + speed <= scr_width && ex + speed <= jump_ex) x += speed;
+					if (ex + speed * 1.3f <= scr_width && ex + speed * 1.3f <= jump_ex) x += speed * 1.3f;
 					break;
 
 				case dll::dirs::left:
-					if (x - speed >= 0 && x + speed >= jump_ex) x -= speed;
+					if (ex - speed * 1.3f >= 0 && ex - speed * 1.3f >= jump_ex) x -= speed * 1.3f;
 					break;
 				}
 				
-				if (y - speed >= jump_ey && y - speed >= 50)y -= speed;
+				if (y - speed >= jump_ey && y - speed >= 50.0f)y -= speed * 3.0f;
 				else dir = dll::dirs::down;
 				SetEdges();
 				return OK;
@@ -160,21 +164,30 @@ class HERO :public dll::FACTORY
 				{
 
 				case dll::dirs::right:
-					if (ex + speed <= scr_width && ex + speed <= jump_ex) x += speed;
+					if (ex + speed * 1.3f <= scr_width && ex + speed * 1.3f <= jump_ex) x += speed * 1.3f;
 					break;
 
 				case dll::dirs::left:
-					if (x - speed >= 0 && x + speed >= jump_ex) x -= speed;
+					if (ex - speed * 1.3f >= 0 && ex - speed * 1.3f >= jump_ex) x -= speed * 1.3f;
 					break;
 
 				}
-				if (y < jump_ey)y += speed;
+				if (y < jump_y)y += speed * 3.0f;
 				else dir = dll::dirs::stop;
 				SetEdges();
 				return OK;
 			}
 
 			return FAIL;
+		}
+		void Fall(float what_speed) override
+		{
+			float my_speed = speed + what_speed;
+			if (ey + my_speed <= scr_height)
+			{
+				y += my_speed;
+				SetEdges();
+			}
 		}
 };
 
@@ -194,7 +207,7 @@ dll::creat_ptr dll::iFactory(types what, float where_y)
 		break;
 
 	case types::gorilla3:
-		ret = new EVILS(scr_width, where_y, types::gorilla1);
+		ret = new EVILS(scr_width, where_y, types::gorilla3);
 		break;
 
 	case types::hero:
